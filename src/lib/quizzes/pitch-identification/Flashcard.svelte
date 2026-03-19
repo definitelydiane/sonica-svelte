@@ -3,6 +3,8 @@
 	import Staff from '$lib/score/components/Staff.svelte';
 	import Glyph from '$lib/score/components/Glyph.svelte';
 
+	import { getScoreContext } from '$lib/score/context.ts';
+
 	import { getAdvanceWidth } from '$lib/smufl/utils.svelte.ts';
 	import { getStaffPosition, parsePitch, getClefGlyphName } from '$lib/score/utils.svelte.ts';
 
@@ -20,8 +22,6 @@
 			clef: 'G' | 'F';
 			id: number;
 			pitch: string;
-			answer: string | null;
-			correct: boolean | null;
 		};
 	};
 
@@ -29,7 +29,7 @@
 
 	const parsedPitch = parsePitch(question.pitch);
 
-	const offsetY = $derived(getStaffPosition({ clef: question.clef, pitch: question.pitch }) / 2);
+	const offsetY = $derived(getStaffPosition({ clef: question.clef, pitch: parsedPitch }) / 2);
 	const noteType = $derived(offsetY >= 2 ? 'noteQuarterDown' : 'noteQuarterUp');
 
 	const clefGlyph = getClefGlyphName(question.clef);
@@ -53,6 +53,14 @@
 		<Glyph name={clefGlyph} />
 		{#key question.id}
 			<g in:fade={{ duration: 200, delay: 250 }} out:tOut fill="black">
+				{#if parsedPitch.accidental}
+					<Glyph
+						color={''}
+						name={parsedPitch.accidental}
+						x={noteXPos - getAdvanceWidth(noteType) * getScoreContext().staffSpace}
+						ysp={offsetY}
+					/>
+				{/if}
 				<Glyph color={''} name={noteType} x={noteXPos} ysp={offsetY} />
 			</g>
 		{/key}

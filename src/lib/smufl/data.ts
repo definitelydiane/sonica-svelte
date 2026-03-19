@@ -1,5 +1,25 @@
 
 export const GlyphNames = {
+  "accidentalSharp": {
+    "alternateCodepoint": "U+266F",
+    "codepoint": "U+E262",
+    "description": "Sharp"
+  },
+  "accidentalDoubleSharp": {
+    "alternateCodepoint": "U+1D12A",
+    "codepoint": "U+E263",
+    "description": "Double sharp"
+  },
+  "accidentalFlat": {
+    "alternateCodepoint": "U+266D",
+    "codepoint": "U+E260",
+    "description": "Flat"
+  },
+  "accidentalDoubleFlat": {
+    "alternateCodepoint": "U+1D12B",
+    "codepoint": "U+E264",
+    "description": "Double flat"
+  },
   "gClef": {
     "alternateCodepoint": "U+1D11E",
     "codepoint": "U+E050",
@@ -10,18 +30,35 @@ export const GlyphNames = {
     "codepoint": "U+E062",
     "description": "F clef"
   },
+  "noteQuarterDown": {
+    "codepoint": "U+E1D6",
+    "description": "Quarter note (crotchet) stem down"
+  },
   "noteQuarterUp": {
     "alternateCodepoint": "U+1D15F",
     "codepoint": "U+E1D5",
     "description": "Quarter note (crotchet) stem up"
-  },
-  "noteQuarterDown": {
-    "codepoint": "U+E1D6",
-    "description": "Quarter note (crotchet) stem down"
   }
 } as const;
 
 export const Classes = {
+  "accidentals": [
+    "accidentalSharp",
+    "accidentalDoubleSharp",
+    "accidentalFlat",
+    "accidentalDoubleFlat"
+  ],
+  "accidentalsSagittalMixed": [
+    "accidentalFlat",
+    "accidentalSharp",
+    "accidentalDoubleFlat"
+  ],
+  "accidentalsStandard": [
+    "accidentalFlat",
+    "accidentalSharp",
+    "accidentalDoubleSharp",
+    "accidentalDoubleFlat"
+  ],
   "clefs": [
     "gClef",
     "fClef"
@@ -33,12 +70,16 @@ export const Classes = {
     "gClef"
   ],
   "combiningStaffPositions": [
-    "noteQuarterUp",
-    "noteQuarterDown"
+    "accidentalSharp",
+    "accidentalDoubleSharp",
+    "accidentalFlat",
+    "accidentalDoubleFlat",
+    "noteQuarterDown",
+    "noteQuarterUp"
   ],
   "forTextBasedApplications": [
-    "noteQuarterUp",
-    "noteQuarterDown"
+    "noteQuarterDown",
+    "noteQuarterUp"
   ]
 } as const;
 
@@ -82,12 +123,56 @@ export const FontMeta = {
     "tupletBracketThickness": 0.16
   },
   "glyphAdvanceWidths": {
+    "accidentalSharp": 0.996,
+    "accidentalDoubleSharp": 1,
+    "accidentalFlat": 0.904,
+    "accidentalDoubleFlat": 1.652,
     "gClef": 2.684,
     "fClef": 2.736,
-    "noteQuarterUp": 1.328,
-    "noteQuarterDown": 1.328
+    "noteQuarterDown": 1.328,
+    "noteQuarterUp": 1.328
   },
   "glyphBBoxes": {
+    "accidentalSharp": {
+      "bBoxNE": [
+        0.996,
+        1.4
+      ],
+      "bBoxSW": [
+        0,
+        -1.392
+      ]
+    },
+    "accidentalDoubleSharp": {
+      "bBoxNE": [
+        0.988,
+        0.508
+      ],
+      "bBoxSW": [
+        0,
+        -0.5
+      ]
+    },
+    "accidentalFlat": {
+      "bBoxNE": [
+        0.904,
+        1.756
+      ],
+      "bBoxSW": [
+        0,
+        -0.7
+      ]
+    },
+    "accidentalDoubleFlat": {
+      "bBoxNE": [
+        1.644,
+        1.748
+      ],
+      "bBoxSW": [
+        0,
+        -0.7
+      ]
+    },
     "gClef": {
       "bBoxNE": [
         2.684,
@@ -108,16 +193,6 @@ export const FontMeta = {
         -2.54
       ]
     },
-    "noteQuarterUp": {
-      "bBoxNE": [
-        1.328,
-        3.5
-      ],
-      "bBoxSW": [
-        0,
-        -0.564
-      ]
-    },
     "noteQuarterDown": {
       "bBoxNE": [
         1.328,
@@ -127,9 +202,43 @@ export const FontMeta = {
         0,
         -3.5
       ]
+    },
+    "noteQuarterUp": {
+      "bBoxNE": [
+        1.328,
+        3.5
+      ],
+      "bBoxSW": [
+        0,
+        -0.564
+      ]
     }
   },
   "glyphsWithAlternates": {
+    "accidentalSharp": {
+      "alternates": [
+        {
+          "codepoint": "U+F429",
+          "name": "accidentalSharpSmall"
+        }
+      ]
+    },
+    "accidentalFlat": {
+      "alternates": [
+        {
+          "codepoint": "U+F427",
+          "name": "accidentalFlatSmall"
+        }
+      ]
+    },
+    "accidentalDoubleFlat": {
+      "alternates": [
+        {
+          "codepoint": "U+F4A1",
+          "name": "accidentalDoubleFlatJoinedStems"
+        }
+      ]
+    },
     "gClef": {
       "alternates": [
         {
@@ -152,6 +261,46 @@ export const FontMeta = {
           "codepoint": "U+F474",
           "name": "fClefSmall"
         }
+      ]
+    }
+  },
+  "glyphsWithAnchors": {
+    "accidentalSharp": {
+      "cutOutNE": [
+        0.84,
+        0.896
+      ],
+      "cutOutNW": [
+        0.144,
+        0.568
+      ],
+      "cutOutSE": [
+        0.84,
+        -0.596
+      ],
+      "cutOutSW": [
+        0.144,
+        -0.896
+      ]
+    },
+    "accidentalFlat": {
+      "cutOutNE": [
+        0.252,
+        0.656
+      ],
+      "cutOutSE": [
+        0.504,
+        -0.476
+      ]
+    },
+    "accidentalDoubleFlat": {
+      "cutOutNE": [
+        0.988,
+        0.644
+      ],
+      "cutOutSE": [
+        1.336,
+        -0.396
       ]
     }
   }

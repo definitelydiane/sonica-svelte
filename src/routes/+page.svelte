@@ -12,7 +12,8 @@
 	import { parsePitch, letterMap } from '$lib/score/utils.svelte.ts';
 	import { fillGrabBag } from './utils.ts';
 
-	const pitches = ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'];
+	// const pitches = ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'];
+	const pitches = ['G#4'];
 
 	// Prevent initial SSR from hydrating a different value
 	let grabBag = hydratable('grabBag', () => {
@@ -34,26 +35,28 @@
 	let question = $state({
 		id: 0,
 		clef: 'G',
-		pitch: grabBag.shift(),
-		answer: null,
-		correct: null
+		pitch: grabBag.shift()
 	});
 
 	function answer(letterClass: string) {
 		const p = parsePitch(question.pitch);
 
-		question.answer = letterClass;
+		// TODO:  do something with the user response
+		// question.answer = letterClass;
 		if (p.letterClass == letterMap[letterClass]) {
-			question.correct = true;
 			flashcardOut = 'green';
 			stats.correct++;
 		} else {
-			question.correct = false;
 			flashcardOut = 'red';
 		}
 		// Do something with the resulting question
 
 		stats.totalQuestions++;
+
+		// Fill grab bag if it's empty
+		if (!grabBag.length) {
+			fillGrabBag(grabBag, pitches);
+		}
 
 		question = {
 			id: question.id + 1,
@@ -62,11 +65,6 @@
 			answer: null,
 			correct: null
 		};
-
-		// Fill grab bag if it's empty
-		if (!grabBag.length) {
-			fillGrabBag(grabBag, pitches);
-		}
 	}
 
 	// Keyboard input handling

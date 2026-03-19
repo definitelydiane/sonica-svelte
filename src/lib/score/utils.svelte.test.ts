@@ -63,3 +63,7 @@ describe("parsePitch", () => {
 		expect(() => parsePitch("C###5")).toThrowError();
 	});
 });
+
+test("getStaffPosition throws when both `pitch` and `pitchClass` are undefined", () => {
+	expect(() => getStaffPosition({clef: 'G'})).toThrowError();
+});

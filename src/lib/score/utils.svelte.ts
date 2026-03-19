@@ -46,11 +46,15 @@ export function parsePitch(pitch: string): Pitch {
 // baseline this a pitch should be. Negative values
 // are below the staff. This method by default takes
 // the pitch as a string
-export function getStaffPosition({clef, pitch}: {
+export function getStaffPosition({clef, pitch, pitchString}: {
 	clef: "G" | "F",
-	pitch: string 
+	pitchString?: string,
+	pitch?: Pitch
 }): number {
-	const p = parsePitch(pitch);
+	if(!pitchString && !pitch) {
+		throw new Error("Expected one of 'pitch' or 'pitchString' passed to getStaffPosition but received undefined");
+	}
+	const p = pitch ?? parsePitch(pitch);
 	let baseline;
 	switch(clef) {
 		// Add more cases here to account for more clefs
