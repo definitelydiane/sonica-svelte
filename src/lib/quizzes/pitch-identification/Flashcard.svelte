@@ -6,7 +6,7 @@
 	import { getScoreContext } from '$lib/score/context.ts';
 
 	import { getAdvanceWidth } from '$lib/smufl/utils.svelte.ts';
-	import { getStaffPosition, parsePitch, getClefGlyphName } from '$lib/score/utils.svelte.ts';
+	import { getStaffPosition, Pitch, getClefGlyphName } from '$lib/score/utils.svelte.ts';
 
 	import { fade } from 'svelte/transition';
 
@@ -27,7 +27,7 @@
 
 	const { pitch, width = 256, height = 256, question, out }: Props = $props();
 
-	const parsedPitch = parsePitch(question.pitch);
+	const parsedPitch = $derived(Pitch.fromSPN(question.pitch));
 
 	const offsetY = $derived(getStaffPosition({ clef: question.clef, pitch: parsedPitch }) / 2);
 	const noteType = $derived(offsetY >= 2 ? 'noteQuarterDown' : 'noteQuarterUp');

@@ -9,11 +9,10 @@
 	import Flashcard from '$lib/quizzes/pitch-identification/Flashcard.svelte';
 
 	import { getAdvanceWidth } from '$lib/smufl/utils.svelte.ts';
-	import { parsePitch, letterMap } from '$lib/score/utils.svelte.ts';
+	import { Pitch } from '$lib/score/utils.svelte.ts';
 	import { fillGrabBag } from './utils.ts';
 
-	// const pitches = ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'];
-	const pitches = ['G#4'];
+	const pitches = ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'];
 
 	// Prevent initial SSR from hydrating a different value
 	let grabBag = hydratable('grabBag', () => {
@@ -38,12 +37,12 @@
 		pitch: grabBag.shift()
 	});
 
-	function answer(letterClass: string) {
-		const p = parsePitch(question.pitch);
+	function answer(noteName: string) {
+		const p = Pitch.fromSPN(question.pitch);
 
 		// TODO:  do something with the user response
 		// question.answer = letterClass;
-		if (p.letterClass == letterMap[letterClass]) {
+		if (p.spnName == noteName) {
 			flashcardOut = 'green';
 			stats.correct++;
 		} else {
@@ -54,13 +53,15 @@
 		stats.totalQuestions++;
 
 		// Fill grab bag if it's empty
-		if (!grabBag.length) {
+		if (!grabBag.length <= 1) {
 			fillGrabBag(grabBag, pitches);
 		}
 
+		const nextPitch = grabBag.shift();
+
 		question = {
 			id: question.id + 1,
-			pitch: grabBag.shift(),
+			pitch: nextPitch,
 			clef: 'G',
 			answer: null,
 			correct: null
@@ -103,7 +104,7 @@
 
 {#snippet answerButton(p)}
 	<button
-		class="border h-8 w-8 rounded-md shadow cursor-pointer hover:bg-neutral-200 active:scale-96 transition duration-200 delay-[0s, 200ms]"
+		class="border h-10 w-10 rounded-md shadow cursor-pointer hover:bg-neutral-200 active:scale-96 transition duration-200 delay-[0s, 200ms]"
 		onclick={() => answer(p)}>{p}</button
 	>
 {/snippet}
@@ -118,9 +119,17 @@
 		role="listbox"
 		onkeydown={handleKeyDown}
 		{@attach grabFocus}
-		class="flex center justify-between max-w-sm m-auto mt-4 focus:border-none focus:outline-none"
+		class="grid grid-cols-7 gap-4 m-auto mt-4 focus:border-none focus:outline-none"
 		tabindex={0}
 	>
+		{@render answerButton('A#')}
+		{@render answerButton('B#')}
+		{@render answerButton('C#')}
+		{@render answerButton('D#')}
+		{@render answerButton('E#')}
+		{@render answerButton('F#')}
+		{@render answerButton('G#')}
+
 		{@render answerButton('A')}
 		{@render answerButton('B')}
 		{@render answerButton('C')}
@@ -128,5 +137,13 @@
 		{@render answerButton('E')}
 		{@render answerButton('F')}
 		{@render answerButton('G')}
+
+		{@render answerButton('Ab')}
+		{@render answerButton('Bb')}
+		{@render answerButton('Cb')}
+		{@render answerButton('Db')}
+		{@render answerButton('Eb')}
+		{@render answerButton('Fb')}
+		{@render answerButton('Gb')}
 	</div>
 </div>
