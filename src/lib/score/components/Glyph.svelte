@@ -18,7 +18,7 @@
 		y: number;
 	}
 
-	const { name, color = 'black', x = 0, y = 0, xsp = 0, ysp = 0 }: Props = $props();
+	const { name, color = 'currentColor', x = 0, y = 0, xsp = 0, ysp = 0 }: Props = $props();
 	const ctx = getScoreContext();
 	const glyph = $derived(getGlyph(name));
 </script>
