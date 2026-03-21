@@ -52,7 +52,7 @@
 </script>
 
 <div class="flex justify-center">
-	<Score centered {width} {height} fill="black">
+	<Score centered {width} {height}>
 		<Staff />
 		{#key question.clef}
 			<g transition:fade={{ duration: 150, delay: 200 }}>
