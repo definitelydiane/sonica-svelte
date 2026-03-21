@@ -6,7 +6,7 @@
 	import { getScoreContext } from '$lib/score/context.ts';
 
 	import { getAdvanceWidth } from '$lib/smufl/utils.svelte.ts';
-	import { getStaffPosition, Pitch, getClefGlyphName } from '$lib/score/utils.svelte.ts';
+	import { getStaffPosition, Pitch, Clef, getClefGlyphName } from '$lib/score/utils.svelte.ts';
 
 	import { fade } from 'svelte/transition';
 
@@ -19,22 +19,20 @@
 		// Question ID
 		// qid: number;
 		question: {
-			clef: 'G' | 'F';
+			clef: Clef;
 			id: number;
-			pitch: string;
+			pitchSPN: string;
 		};
 	};
 
 	const { pitch, width = 256, height = 256, question, out }: Props = $props();
 
-	const parsedPitch = $derived(Pitch.fromSPN(question.pitch));
+	const parsedPitch = $derived(Pitch.fromSPN(question.pitchSPN));
 
 	const offsetY = $derived(getStaffPosition({ clef: question.clef, pitch: parsedPitch }) / 2);
 	const noteType = $derived(offsetY >= 2 ? 'noteQuarterDown' : 'noteQuarterUp');
 
-	const clefGlyph = getClefGlyphName(question.clef);
-
-	const noteXPos = (width - getAdvanceWidth(clefGlyph)) / 2;
+	const noteXPos = (width - getAdvanceWidth(question.clef)) / 2;
 
 	function tOut() {
 		return {
@@ -50,7 +48,11 @@
 <div class="flex justify-center">
 	<Score centered {width} {height}>
 		<Staff />
-		<Glyph name={clefGlyph} />
+		{#key question.clef}
+			<g transition:fade={{ duration: 150, delay: 200 }}>
+				<Glyph name={question.clef} />
+			</g>
+		{/key}
 		{#key question.id}
 			<g in:fade={{ duration: 200, delay: 250 }} out:tOut fill="black">
 				{#if parsedPitch.accidental}
