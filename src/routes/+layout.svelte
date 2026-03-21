@@ -2,6 +2,8 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 
+	import ThemeToggle from '$components/ThemeToggle.svelte';
+
 	let { children } = $props();
 </script>
 
@@ -10,8 +12,11 @@
 	<link rel="preload" href="/fonts/Bravura.woff2" as="font" type="font/woff2" />
 </svelte:head>
 
-<div class="w-full h-screen flex flex-col justify-between">
-	<div class="max-w-lg mx-auto pt-12">
+<div class="w-full h-screen flex flex-col justify-between dark:bg-neutral-800 dark:text-white">
+	<div class="shrink flex justify-end m-auto max-w-2xl w-full">
+		<ThemeToggle />
+	</div>
+	<div class="max-w-lg mx-auto grow">
 		{@render children()}
 	</div>
 	<footer class="flex justify-center">

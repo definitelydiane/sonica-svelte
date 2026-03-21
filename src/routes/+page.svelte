@@ -54,11 +54,10 @@
 		// TODO:  do something with the user response
 		// question.answer = letterClass;
 		if (p.spnName == noteName) {
-			flashcardOut = 'green';
 			stats.correct++;
-		} else {
-			flashcardOut = 'red';
 		}
+
+		setTransitionColor(p.spnName == noteName);
 		// Do something with the resulting question
 
 		stats.totalQuestions++;
@@ -77,6 +76,20 @@
 			answer: null,
 			correct: null
 		};
+	}
+
+	/**
+	 * Sets the color of our exiting flash card
+	 */
+	function setTransitionColor(correct: boolean): string {
+		const isDarkMode = localStorage.getItem('theme') == 'dark';
+
+		// This is passed directly into the CSS so we should be able to use TailwindCSS variables here
+		if (correct) {
+			flashcardOut = isDarkMode ? 'var(--color-green-400)' : 'var(--color-green-500)';
+		} else {
+			flashcardOut = isDarkMode ? 'var(--color-red-400)' : 'var(--color-red-500)';
+		}
 	}
 
 	// Keyboard input handling

@@ -12,7 +12,7 @@
 		color: string;
 	}
 
-	const { lines = 5, color = 'black' }: Props = $props();
+	const { lines = 5, color = 'currentColor' }: Props = $props();
 	const ctx = getScoreContext();
 	const staffHeight = getStaffHeight(ctx);
 </script>

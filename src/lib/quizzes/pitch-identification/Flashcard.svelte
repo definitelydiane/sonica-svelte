@@ -14,7 +14,7 @@
 		width: number;
 		height: number;
 
-		out: 'green' | 'red';
+		out: string;
 
 		// Question ID
 		// qid: number;
@@ -34,7 +34,13 @@
 
 	const noteXPos = (width - getAdvanceWidth(question.clef)) / 2;
 
-	function tOut() {
+	function tOut(node, params) {
+		// It is possible for this <g> tag to have 2 <text> elements:
+		//	1. the note glyph itself
+		//	2. the accidental
+		// This node will be removed from the tree once the transition is
+		// completed, so there's not need to ever set this back to anything.
+		[...node.children].forEach((c) => c.setAttribute('fill', ''));
 		return {
 			direction: 'out',
 			duration: 200,
@@ -54,16 +60,15 @@
 			</g>
 		{/key}
 		{#key question.id}
-			<g in:fade={{ duration: 200, delay: 250 }} out:tOut fill="black">
+			<g in:fade={{ duration: 200, delay: 250 }} out:tOut>
 				{#if parsedPitch.accidental}
 					<Glyph
-						color={''}
 						name={parsedPitch.accidental}
 						x={noteXPos - getAdvanceWidth(noteType) * getScoreContext().staffSpace}
 						ysp={offsetY}
 					/>
 				{/if}
-				<Glyph color={''} name={noteType} x={noteXPos} ysp={offsetY} />
+				<Glyph name={noteType} x={noteXPos} ysp={offsetY} />
 			</g>
 		{/key}
 	</Score>
