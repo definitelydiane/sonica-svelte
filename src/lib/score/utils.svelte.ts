@@ -9,13 +9,13 @@ export function getBottomStaffLine(ctx: ScoreContext) {
 }
 
 export const letterMap = {
-	'A': 0,
-	'B': 1,
-	'C': 2,
-	'D': 3,
-	'E': 4,
-	'F': 5,
-	'G': 6,
+	'A': 5,
+	'B': 6,
+	'C': 0,
+	'D': 1,
+	'E': 2,
+	'F': 3,
+	'G': 4,
 } as const;
 
 export enum PitchLetter {

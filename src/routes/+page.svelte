@@ -14,8 +14,8 @@
 
 	const quizConfig = {
 		pitches: {
-			[Clef.G]: ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'],
-			[Clef.F]: ['F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A4', 'B4']
+			[Clef.G]: ['D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5'],
+			[Clef.F]: ['F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3']
 		}
 	};
 
@@ -24,7 +24,6 @@
 	const pitches = Object.entries(quizConfig.pitches).flatMap(([clef, pitchSPNs]) =>
 		[...new Set(pitchSPNs)].map((pitchSPN) => ({ clef, pitchSPN }))
 	);
-	console.log(pitches);
 
 	// Prevent initial SSR from hydrating a different value
 	let grabBag = hydratable('grabBag', () => {
