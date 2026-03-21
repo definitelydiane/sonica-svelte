@@ -82,7 +82,7 @@
 	 * Sets the color of our exiting flash card
 	 */
 	function setTransitionColor(correct: boolean): string {
-		const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		const isDarkMode = localStorage.getItem('theme') == 'dark';
 
 		// This is passed directly into the CSS so we should be able to use TailwindCSS variables here
 		if (correct) {

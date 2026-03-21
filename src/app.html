@@ -7,12 +7,14 @@
 		<script>
       // This runs synchronously before any rendering
 			// Get the theme the user has selected
-      try {
-        const value = localStorage.getItem('theme');
-        if (value) {
-          document.documentElement.setAttribute('data-theme', value);
-        }
-      } catch (e) {}
+			try {
+				const stored = localStorage.getItem('theme');
+				const theme = stored ?? (
+					window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+				);
+				document.documentElement.setAttribute('data-theme', theme);
+				if (!stored) localStorage.setItem('theme', theme);
+			} catch (e) {} 
     </script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
