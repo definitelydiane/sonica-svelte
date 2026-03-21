@@ -9,10 +9,22 @@
 	import Flashcard from '$lib/quizzes/pitch-identification/Flashcard.svelte';
 
 	import { getAdvanceWidth } from '$lib/smufl/utils.svelte.ts';
-	import { Pitch } from '$lib/score/utils.svelte.ts';
+	import { Pitch, Clef } from '$lib/score/utils.svelte.ts';
 	import { fillGrabBag } from './utils.ts';
 
-	const pitches = ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'];
+	// const pitches = ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'];
+
+	const quizConfig = {
+		pitches: {
+			[Clef.G]: ['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'],
+			[Clef.F]: ['B4', 'A4', 'G3']
+		}
+	};
+
+	const pitches = Object.entries(quizConfig.pitches).flatMap(([clef, pitchSPNs]) =>
+		pitchSPNs.map((pitchSPN) => ({ clef, pitchSPN }))
+	);
+	console.log(pitches);
 
 	// Prevent initial SSR from hydrating a different value
 	let grabBag = hydratable('grabBag', () => {
@@ -33,12 +45,12 @@
 	// Maybe change to raw later
 	let question = $state({
 		id: 0,
-		clef: 'G',
-		pitch: grabBag.shift()
+		clef: grabBag[0].clef,
+		pitchSPN: grabBag.shift().pitchSPN
 	});
 
 	function answer(noteName: string) {
-		const p = Pitch.fromSPN(question.pitch);
+		const p = Pitch.fromSPN(question.pitchSPN);
 
 		// TODO:  do something with the user response
 		// question.answer = letterClass;
@@ -61,8 +73,8 @@
 
 		question = {
 			id: question.id + 1,
-			pitch: nextPitch,
-			clef: 'G',
+			pitchSPN: nextPitch.pitchSPN,
+			clef: nextPitch.clef,
 			answer: null,
 			correct: null
 		};

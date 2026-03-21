@@ -28,6 +28,11 @@ export enum PitchLetter {
 	G = 'G'
 }
 
+export enum Clef {
+	G = 'gClef',
+	F = 'fClef',
+}
+
 export enum Accidental {
 	Sharp = "accidentalSharp",
 	Flat = "accidentalFlat",
@@ -112,7 +117,7 @@ export class Pitch {
 // are below the staff. This method by default takes
 // the pitch as a string
 export function getStaffPosition({clef, pitch, pitchString}: {
-	clef: "G" | "F",
+	clef: Clef,
 	pitchString?: string,
 	pitch?: Pitch
 }): number {
@@ -123,14 +128,14 @@ export function getStaffPosition({clef, pitch, pitchString}: {
 	let baseline;
 	switch(clef) {
 		// Add more cases here to account for more clefs
-		case "G":
+		case Clef.G:
 			baseline = {
 				letterClass: PitchLetter.E,
 				accidental: undefined,
 				octave: 4,
 			};
 			break;
-		case "F":
+		case Clef.F:
 			baseline = {
 				letterClass: PitchLetter.G,
 				accidental: undefined,
