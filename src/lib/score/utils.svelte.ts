@@ -190,17 +190,7 @@ export class Pitch {
 	 * Returns the position on a staff in half-spaces!
 	 */
 	public positionOnStaff(clef: Clef): number {
-		let baseline;
-		switch(clef) {
-			// Add more cases here to account for more clefs
-			case Clef.G:
-				baseline = Pitch.fromSPN('E4');
-				break;
-			case Clef.F:
-				baseline = Pitch.fromSPN('G2'); 
-				break;
-		}
-
+		const baseline = getClefBaseline(clef);;
 		return this.staffScalar - baseline.staffScalar;
 	}
 
@@ -260,8 +250,17 @@ export function getStaffPosition({clef, pitch, pitchString}: {
 * do a conversion between the resulting scalar and SPN
 */
 export function getPitchAtStaffPosition(clef: Clef, ypos: number): Pitch {
-	let baseline;
+	const baseline = getClefBaseline(clef);
+	const sum = baseline.staffScalar + ypos * 2;
 
+	return Pitch.fromStaffScalar(sum);
+}
+
+/**
+ * Return the pitch at the bottom staff line for a given clef
+ */
+export function getClefBaseline(clef:Clef): Pitch {
+	let baseline: Pitch;
 	switch(clef) {
 		case Clef.G:
 			baseline = Pitch.fromSPN('E4');
@@ -270,17 +269,6 @@ export function getPitchAtStaffPosition(clef: Clef, ypos: number): Pitch {
 			baseline = Pitch.fromSPN('G2');
 			break;
 	}
-
-	const sum = baseline.staffScalar + ypos * 2;
-
-	return Pitch.fromStaffScalar(sum);
+	return baseline;
 }
 
-export function getClefGlyphName(clef: 'G' | 'F'): 'gClef' | 'fClef' {
-	switch(clef) { 
-		case 'G':
-			return 'gClef';
-		case 'F':
-			return 'fClef';
-	}
-}

@@ -6,7 +6,7 @@
 	import { getScoreContext } from '$lib/score/context.ts';
 
 	import { getAdvanceWidth } from '$lib/smufl/utils.svelte.ts';
-	import { getStaffPosition, Pitch, Clef, getClefGlyphName } from '$lib/score/utils.svelte.ts';
+	import { getStaffPosition, Pitch, Clef } from '$lib/score/utils.svelte.ts';
 
 	import { fade } from 'svelte/transition';
 

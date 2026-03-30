@@ -26,24 +26,20 @@
 	let pitchQuizConfigState = $state({ ...DefaultPitchQuizConfigContext });
 	setPitchQuizContext(pitchQuizConfigState);
 
-	const possiblePitches = $derived.by(() => {
-		const trebleClef = pitchQuizConfigState.clefs[Clef.G];
-		const bassClef = pitchQuizConfigState.clefs[Clef.F];
+	function getConfiguredRangeForClef(clef: Clef) {
+		const clefConfig = pitchQuizConfigState.clefs[clef];
+		if (!clefConfig.enabled) return [];
+		return Pitch.range(clefConfig.range.min, clefConfig.range.max, {
+			sharps: clefConfig.sharps,
+			flats: clefConfig.flats
+		}).map((v) => v.toString());
+	}
 
+	const possiblePitches = $derived.by(() => {
 		// If the clef is disabled, just use an empty set.
 		return {
-			[Clef.G]: trebleClef.enabled
-				? Pitch.range(trebleClef.range.min, trebleClef.range.max, {
-						sharps: trebleClef.sharps,
-						flats: trebleClef.flats
-					}).map((v) => v.toString())
-				: [],
-			[Clef.F]: bassClef.enabled
-				? Pitch.range(bassClef.range.min, bassClef.range.max, {
-						sharps: bassClef.sharps,
-						flats: bassClef.flats
-					}).map((v) => v.toString())
-				: []
+			[Clef.G]: getConfiguredRangeForClef(Clef.G),
+			[Clef.F]: getConfiguredRangeForClef(Clef.F)
 		};
 	});
 
@@ -57,36 +53,37 @@
 
 	const usedPitches = $derived.by(() => {
 		// Guarantee insertion order by initializing the map
-		const result = {
-			'A#': false,
-			'B#': false,
-			'C#': false,
-			'D#': false,
-			'E#': false,
-			'F#': false,
-			'G#': false,
-			A: false,
-			B: false,
-			C: false,
-			D: false,
-			E: false,
-			F: false,
-			G: false,
-			Ab: false,
-			Bb: false,
-			Cb: false,
-			Db: false,
-			Eb: false,
-			Fb: false,
-			Gb: false
-		};
+		const result = new Map([
+			['A#', false],
+			['B#', false],
+			['C#', false],
+			['D#', false],
+			['E#', false],
+			['F#', false],
+			['G#', false],
+			['A', false],
+			['B', false],
+			['C', false],
+			['D', false],
+			['E', false],
+			['F', false],
+			['G', false],
+			['Ab', false],
+			['Bb', false],
+			['Cb', false],
+			['Db', false],
+			['Eb', false],
+			['Fb', false],
+			['Gb', false]
+		]);
 
 		const re = /[A-G](#+|b+)?/;
 		pitches.forEach(({ pitchSPN }) => {
 			const matches = pitchSPN.match(re);
 			const key = matches[0];
-			if (key in result) result[key] = true;
+			if (result.has(key)) result.set(key, true);
 		});
+		$inspect(result);
 		return result;
 	});
 
@@ -246,7 +243,7 @@
 			class="grid grid-cols-7 gap-4 m-auto mt-4 focus:border-none focus:outline-none"
 			tabindex={0}
 		>
-			{#each Object.entries(usedPitches) as p}
+			{#each usedPitches.entries() as p}
 				{@render answerButton(p[0], p[1])}
 			{/each}
 		</div>
