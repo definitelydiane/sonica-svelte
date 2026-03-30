@@ -13,8 +13,8 @@
 	}
 
 	const { lines = 5, color = 'currentColor' }: Props = $props();
-	const ctx = getScoreContext();
-	const staffHeight = getStaffHeight(ctx);
+	const ctx = $derived(getScoreContext()());
+	const staffHeight = $derived(getStaffHeight(ctx));
 </script>
 
 <g stroke={color}>

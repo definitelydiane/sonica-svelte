@@ -31,3 +31,5 @@ todos.md
 
 *.swp
 *.DS_Store
+
+src/routes/_sandbox
