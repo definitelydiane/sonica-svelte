@@ -16,14 +16,25 @@
 		// Px units
 		x: number;
 		y: number;
+
+		onclick?: () => void;
 	}
 
-	const { name, color = 'currentColor', x = 0, y = 0, xsp = 0, ysp = 0 }: Props = $props();
-	const ctx = getScoreContext();
+	const {
+		name,
+		color = 'currentColor',
+		x = 0,
+		y = 0,
+		xsp = 0,
+		ysp = 0,
+		...props
+	}: Props = $props();
+	const ctx = $derived(getScoreContext()());
 	const glyph = $derived(getGlyph(name));
 </script>
 
 <text
+	{...props}
 	font-family="Bravura"
 	fill={color}
 	font-size={getStaffHeight(ctx)}

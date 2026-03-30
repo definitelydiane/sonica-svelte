@@ -13,6 +13,7 @@
 	type Props = {
 		width: number;
 		height: number;
+		staffSpace: number;
 
 		out: string;
 
@@ -25,14 +26,17 @@
 		};
 	};
 
-	const { pitch, width = 256, height = 256, question, out }: Props = $props();
+	const { pitch, width = 256, height = 256, staffSpace = 16, question, out }: Props = $props();
 
 	const parsedPitch = $derived(Pitch.fromSPN(question.pitchSPN));
 
-	const offsetY = $derived(getStaffPosition({ clef: question.clef, pitch: parsedPitch }) / 2);
+	const offsetY = $derived(parsedPitch.positionOnStaff(question.clef) / 2);
+
 	const noteType = $derived(offsetY >= 2 ? 'noteQuarterDown' : 'noteQuarterUp');
 
-	const noteXPos = (width - getAdvanceWidth(question.clef)) / 2;
+	const noteXPos = $derived((width - getAdvanceWidth(question.clef)) / 2);
+
+	const accidentalX = $derived(noteXPos - getAdvanceWidth(noteType) * staffSpace);
 
 	function tOut(node, params) {
 		// It is possible for this <g> tag to have 2 <text> elements:
@@ -52,21 +56,17 @@
 </script>
 
 <div class="flex justify-center">
-	<Score centered {width} {height}>
+	<Score centered {width} {height} {staffSpace}>
 		<Staff />
 		{#key question.clef}
 			<g transition:fade={{ duration: 150, delay: 200 }}>
 				<Glyph name={question.clef} />
 			</g>
 		{/key}
-		{#key question.id}
+		{#key question.pitchSPN}
 			<g in:fade={{ duration: 200, delay: 250 }} out:tOut>
 				{#if parsedPitch.accidental}
-					<Glyph
-						name={parsedPitch.accidental}
-						x={noteXPos - getAdvanceWidth(noteType) * getScoreContext().staffSpace}
-						ysp={offsetY}
-					/>
+					<Glyph name={parsedPitch.accidental} x={accidentalX} ysp={offsetY} />
 				{/if}
 				<Glyph name={noteType} x={noteXPos} ysp={offsetY} />
 			</g>
