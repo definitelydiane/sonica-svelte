@@ -83,7 +83,6 @@
 			const key = matches[0];
 			if (result.has(key)) result.set(key, true);
 		});
-		$inspect(result);
 		return result;
 	});
 
