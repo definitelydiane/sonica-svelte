@@ -1,13 +1,13 @@
 import { describe, test, expect } from "vitest";
 
 import { FontMeta } from "$lib/smufl/data.ts";
-import { FretboardContext as Context} from "$lib/fretboard/context.svelte.ts";
-import { FretboardContextBase } from "$lib/fretboard/context.svelte.ts";
-import { FretboardCenteredContext } from "$lib/fretboard/context.svelte.ts";
+import { StaffContext} from "$lib/score/ScoreContext.svelte.ts";
+import { StaffContextBase } from "$lib/score/ScoreContext.svelte.ts";
+import { StaffCenteredContext } from "$lib/score/ScoreContext.svelte.ts";
 
-describe("FretboardContextBase", () => {
+describe("StaffContextBase", () => {
 	test.each([0, 1, 2, 3, 4, 5, 6])("staffHeight is calculated correctly for %d staff lines", (d) => {
-		const ctx = new FretboardContextBase();
+		const ctx = new StaffContextBase();
 		ctx.staffSpace = 16;
 
 		ctx.staffLines = d;
@@ -15,9 +15,9 @@ describe("FretboardContextBase", () => {
 	});
 });
 
-describe("FretboardContext", () => {
+describe("StaffContext", () => {
 	test("is initialized with default values", () => {
-		const ctx = new Context();
+		const ctx = new StaffContext();
 		const defaults = {
 			sp: 16,
 			hsp: 128 / 16,
@@ -33,7 +33,7 @@ describe("FretboardContext", () => {
 	});
 
 	test("height and heightSP can be assigned interchangeably", () => {
-		const ctx = new Context();
+		const ctx = new StaffContext();
 
 		ctx.height = 256;
 		expect(ctx.heightSP).toEqual(256 / ctx.staffSpace);
@@ -43,7 +43,7 @@ describe("FretboardContext", () => {
 	});
 
 	test("width and widthSP can be assigned interchangeably", () => {
-		const ctx = new Context();
+		const ctx = new StaffContext();
 
 		ctx.width = 512;
 		expect(ctx.widthSP).toEqual(512 / ctx.staffSpace);
@@ -56,7 +56,7 @@ describe("FretboardContext", () => {
 		[20, 256],
 		[12, 256],
 	])("Setting staffSpace to %d correctly mutates heightSP and marginSP without changing height (%d)", (sp, h) => {
-		const ctx = new Context();
+		const ctx = new StaffContext();
 		ctx.height = h;
 		ctx.margin = h;
 
@@ -73,40 +73,52 @@ describe("FretboardContext", () => {
 		expect(ctx.marginSP).toEqual([h, h, h, h].map(v => v / sp));
 	});
 
+	test.each([[20, 512], [12, 512]])("Setting staffSpace to %d correctly mutates widthSP without changing width (%d)", (sp, w) => {
+		const ctx = new StaffContext();
+		ctx.width = w;
+		expect(ctx.widthSP).toEqual(w / ctx.staffSpace);
+
+		ctx.staffSpace = sp;
+
+		// Width remains unchanged
+		expect(ctx.width).toEqual(w);
+		expect(ctx.widthSP).toEqual(w / sp);
+	});
+
 	describe("margin", () => {
 
 		test("marginSP = 2 sets all margin values to 2", () => {
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.marginSP = 2;
 			expect(ctx.marginSP).toEqual([2, 2, 2, 2]);
 		});
 
 		test("marginSP = [2] sets all margin values to 2", () => {
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.marginSP = [2];
 			expect(ctx.marginSP).toEqual([2, 2, 2, 2]);
 		});
 
 		test("marginSP = [2, 3] sets top-bottom to 2 and left-right to 3", () => {
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.marginSP = [2, 3];
 			expect(ctx.marginSP).toEqual([2, 3, 2, 3]);
 		});
 
 		test("marginSP = [2, 3, 4] sets top to 2, left-right to 3, and bottom to 4", () => {
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.marginSP = [2, 3, 4];
 			expect(ctx.marginSP).toEqual([2, 3, 4, 3]);
 		});
 
 		test("marginSP = [1, 2, 3, 4] sets the margins of the returned instance", () => {
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.marginSP = [1, 2, 3, 4];
 			expect(ctx.marginSP).toEqual([1, 2, 3, 4]);
 		});
 
 		test("Assigning to margin and marginSP throws an error when the array is an invalid length", () => {
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			expect(() => ctx.marginSP = []).toThrow("Invalid array length. Expected 1-4 elements.");
 			expect(() => ctx.marginSP = [1, 2, 3, 4, 5]).toThrow("Invalid array length. Expected 1-4 elements.");
 		});
@@ -114,7 +126,7 @@ describe("FretboardContext", () => {
 		test("margin = 2 sets all margin values to 2", () => {
 			const expected = [2, 2, 2, 2];
 
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.margin = 2;
 
 			expect(ctx.margin).toEqual(expected);
@@ -124,7 +136,7 @@ describe("FretboardContext", () => {
 		test("margin = [2] sets all margin values  to 2", () => {
 			const expected = [2, 2, 2, 2];
 
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.margin = [2];
 
 			expect(ctx.margin).toEqual(expected);
@@ -134,7 +146,7 @@ describe("FretboardContext", () => {
 		test("margin = [2, 3] sets top-bottom to 2 and left-right to 3", () => {
 			const expected = [2, 3, 2, 3];
 
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.margin = [2, 3];
 
 			expect(ctx.margin).toEqual(expected);
@@ -144,7 +156,7 @@ describe("FretboardContext", () => {
 		test("margin = [2, 3, 4] sets top to 2, left-right to 3, and bottom to 4", () => {
 			const expected = [2, 3, 4, 3];
 
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.margin = [2, 3, 4];
 
 			expect(ctx.margin).toEqual(expected);
@@ -154,7 +166,7 @@ describe("FretboardContext", () => {
 		test("marginSP = [1, 2, 3, 4] sets the margins of the returned instance", () => {
 			const expected = [1, 2, 3, 4];
 
-			const ctx = new Context();
+			const ctx = new StaffContext();
 			ctx.margin = [1, 2, 3, 4];
 
 			expect(ctx.margin).toEqual(expected);
@@ -163,9 +175,9 @@ describe("FretboardContext", () => {
 	});
 });
 
-describe("FretboardCenteredContext", () => {
+describe("StaffCenteredContext", () => {
 	test("margin is readonly", () => {
-		const ctx = new FretboardCenteredContext();
+		const ctx = new StaffCenteredContext();
 		expect(() => ctx.margin = [2]).toThrow();
 		expect(() => ctx.marginSP = [2]).toThrow();
 
@@ -174,7 +186,7 @@ describe("FretboardCenteredContext", () => {
 	});
 
 	test("vertical margin should be automatically set from constructor", () => {
-		const ctx = new FretboardCenteredContext();
+		const ctx = new StaffCenteredContext();
 		const defaultHeight  = 128;
 
 		const marginY = (defaultHeight - (ctx.staffSpace * (ctx.staffLines - 1))) / 2;
@@ -182,7 +194,7 @@ describe("FretboardCenteredContext", () => {
 	});
 
 	test("vertical margins are re-calculated when size changes", () => {
-		const ctx = new FretboardCenteredContext();
+		const ctx = new StaffCenteredContext();
 
 		// Function to calculate the expected vertical margins based on h
 		const marginY = (h: number) => (h - (ctx.staffSpace * (ctx.staffLines - 1))) / 2;
@@ -205,7 +217,7 @@ describe("FretboardCenteredContext", () => {
 	});
 
 	test("vertical margins are re-calculated when number of staff lines change", () => {
-		const ctx = new FretboardCenteredContext();
+		const ctx = new StaffCenteredContext();
 		const controlStaffLines = 5;
 		const testStaffLines = 6;
 

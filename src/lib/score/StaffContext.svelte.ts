@@ -1,7 +1,7 @@
 import { FontMeta } from '$lib/smufl/data.ts';
 import { createContext } from "svelte";
 
-export class FretboardContextBase {
+export class StaffContextBase {
 	public heightSP = $state(0);
 	public widthSP = $state(0);
 	protected _staffLines = $state(5);
@@ -46,6 +46,7 @@ export class FretboardContextBase {
 		// Make sure to scale the staff space values without changing the
 		// derived pixel values
 		this.heightSP *= scaleFactor;
+		this.widthSP *= scaleFactor;
 		this._marginSP = this.marginSP.map(v => v * scaleFactor);
 		this._staffSpace = s;
 	}
@@ -75,7 +76,7 @@ export class FretboardContextBase {
 	}
 }
 
-export class FretboardContext extends FretboardContextBase {
+export class StaffContext extends StaffContextBase {
 
 	constructor() {
 		super();
@@ -130,7 +131,7 @@ export class FretboardContext extends FretboardContextBase {
 	}
 }
 
-export class FretboardCenteredContext extends FretboardContextBase {
+export class StaffCenteredContext extends StaffContextBase {
 	constructor() {
 		super();
 		this._staffLines = 5;
@@ -163,4 +164,4 @@ export class FretboardCenteredContext extends FretboardContextBase {
 
 
 
-export const [getFretboardContext, setFretboardContext] = createContext<FretboardContextBase>();
+export const [getStaffContext, setStaffContext] = createContext<StaffContextBase>();
