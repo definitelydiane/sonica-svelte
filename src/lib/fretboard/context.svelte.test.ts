@@ -203,4 +203,22 @@ describe("FretboardCenteredContext", () => {
 		// Make sure the setter has a corresponding getter
 		expect(ctx.height).toEqual(256);
 	});
+
+	test("vertical margins are re-calculated when number of staff lines change", () => {
+		const ctx = new FretboardCenteredContext();
+		const controlStaffLines = 5;
+		const testStaffLines = 6;
+
+		const marginY = (l: number) => (ctx.height - (ctx.staffSpace * (l - 1))) / 2;
+
+		ctx.staffLines = controlStaffLines;
+		const y1 = marginY(controlStaffLines);
+		expect(ctx.margin).toEqual([y1, 0, y1, 0]);
+		expect(ctx.staffLines).toEqual(5);
+
+		ctx.staffLines = testStaffLines;
+		const y2 = marginY(testStaffLines);
+		expect(ctx.margin).toEqual([y2, 0, y2, 0]);
+		expect(ctx.staffLines).toEqual(6);
+	});
 });

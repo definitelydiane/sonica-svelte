@@ -4,7 +4,7 @@ import { createContext } from "svelte";
 export class FretboardContextBase {
 	public heightSP = $state(0);
 	public widthSP = $state(0);
-	public staffLines = $state(5);
+	protected _staffLines = $state(5);
 
 	private _staffSpace = $state(16);
 	/**
@@ -48,6 +48,14 @@ export class FretboardContextBase {
 		this.heightSP *= scaleFactor;
 		this._marginSP = this.marginSP.map(v => v * scaleFactor);
 		this._staffSpace = s;
+	}
+
+	public get staffLines(): number {
+		return this._staffLines;
+	}
+
+	public set staffLines(n: number) {
+		this._staffLines = n;
 	}
 
 	public get marginSP(): [number, number, number, number] {
@@ -125,6 +133,7 @@ export class FretboardContext extends FretboardContextBase {
 export class FretboardCenteredContext extends FretboardContextBase {
 	constructor() {
 		super();
+		this._staffLines = 5;
 		this.centerVertical();
 	}
 
@@ -141,8 +150,17 @@ export class FretboardCenteredContext extends FretboardContextBase {
 	public get height() {
 		return this.heightSP * this.staffSpace;
 	}
+
+	public set staffLines(n: number) {
+		this._staffLines = n;
+		this.centerVertical();
+	}
+
+	public get staffLines() {
+		return this._staffLines;
+	}
 }
 
 
 
-export const [getFretboardContext, setFretboardContext] = createContext<FretboardScoreContext>();
+export const [getFretboardContext, setFretboardContext] = createContext<FretboardContextBase>();
