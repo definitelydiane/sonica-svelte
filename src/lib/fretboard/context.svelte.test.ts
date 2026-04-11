@@ -175,12 +175,32 @@ describe("FretboardCenteredContext", () => {
 
 	test("vertical margin should be automatically set from constructor", () => {
 		const ctx = new FretboardCenteredContext();
-		ctx.height = 128;
-		ctx.width = 256;
-		ctx.staffSpace = 16;
-		ctx.staffLines = 5;
+		const defaultHeight  = 128;
 
-		const marginY = (ctx.height - (ctx.staffSpace * (ctx.staffLines - 1))) / 2;
+		const marginY = (defaultHeight - (ctx.staffSpace * (ctx.staffLines - 1))) / 2;
 		expect(ctx.margin).toEqual([marginY, 0, marginY, 0]);
+	});
+
+	test("vertical margins are re-calculated when size changes", () => {
+		const ctx = new FretboardCenteredContext();
+
+		// Function to calculate the expected vertical margins based on h
+		const marginY = (h: number) => (h - (ctx.staffSpace * (ctx.staffLines - 1))) / 2;
+
+		let controlHeight = 128
+		let testHeight = 256;
+
+		ctx.height = controlHeight;
+
+		const y1 = marginY(controlHeight);
+		expect(ctx.margin).toEqual([y1, 0, y1, 0]);
+
+		// Resize the height
+		ctx.height = testHeight;
+		const y2 = marginY(testHeight);
+		expect(ctx.margin).toEqual([y2, 0, y2, 0]);
+
+		// Make sure the setter has a corresponding getter
+		expect(ctx.height).toEqual(256);
 	});
 });

@@ -132,6 +132,15 @@ export class FretboardCenteredContext extends FretboardContextBase {
 		this._marginSP[0] = [(this.heightSP - (this.staffLines - 1)) / 2];
 		this._marginSP[2] = [(this.heightSP - (this.staffLines - 1)) / 2];
 	}
+
+	public set height(h: number) {
+		this.heightSP = h / this.staffSpace;
+		this.centerVertical();
+	}
+
+	public get height() {
+		return this.heightSP * this.staffSpace;
+	}
 }
 
 
