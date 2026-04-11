@@ -4,7 +4,7 @@
 	- Defautls to 6 strings.
 -->
 <script lang="ts">
-	import { FretboardContext, setFretboardContext } from '$lib/fretboard/context.svelte.ts';
+	import { FretboardCenteredContext, setFretboardContext } from '$lib/fretboard/context.svelte.ts';
 
 	interface Props {
 		lines: number;
@@ -13,13 +13,14 @@
 
 	const { lines = 6, color = 'currentColor' }: Props = $props();
 
-	const ctx = new FretboardContext();
+	const ctx = new FretboardCenteredContext();
+ctx.staffLines = lines;
 	setFretboardContext(ctx);
 </script>
 
 <svg height={ctx.height} width={ctx.width}>
 	<g stroke={color}>
-		{#each { length: lines }, i}
+		{#each { length: ctx.staffLines }, i}
 			<line
 				x1={ctx.margin[3]}
 				x2={ctx.width - ctx.margin[1]}
@@ -29,9 +30,9 @@
 			/>
 		{/each}
 	</g>
-	<g>
+	<g stroke={color}>
 		<!-- nut -->
-		<line x1="0" x2="0" y1="0" y2={ctx.staffHeight} />
+		<line x1="0" x2="0" y1={ctx.bottomStaffLine} y2={ctx.bottomStaffLine - ctx.staffHeight} />
 		<!-- frets & -->
 		<g stroke={color}> </g>
 	</g>
