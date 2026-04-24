@@ -1,9 +1,9 @@
 import { describe, test, expect } from "vitest";
 
 import { FontMeta } from "$lib/smufl/data.ts";
-import { StaffContext} from "$lib/score/ScoreContext.svelte.ts";
-import { StaffContextBase } from "$lib/score/ScoreContext.svelte.ts";
-import { StaffCenteredContext } from "$lib/score/ScoreContext.svelte.ts";
+import { StaffContext} from "$lib/score/StaffContext.svelte.ts";
+import { StaffContextBase } from "$lib/score/StaffContext.svelte.ts";
+import { StaffCenteredContext } from "$lib/score/StaffContext.svelte.ts";
 
 describe("StaffContextBase", () => {
 	test.each([0, 1, 2, 3, 4, 5, 6])("staffHeight is calculated correctly for %d staff lines", (d) => {
